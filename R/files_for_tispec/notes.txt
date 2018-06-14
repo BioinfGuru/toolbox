@@ -1,0 +1,86 @@
+######
+# TODO
+######
+
+1) go through: http://bioconductor.org/developers/package-guidelines/
+
+2) switch to devel before submission
+ - http://bioconductor.org/developers/how-to/useDevel/
+ - https://www.bioconductor.org/install/
+
+
+#############
+# Future work
+#############
+
+1) Get human + mouse data....new function --> 2 facets plots --> 1 mouse, 1 human --> so same graph shows comparison
+
+2) Function suggestions:
+	- function to cut from corrplot$local a set of genes and plot similar to plotTop
+ 	- query from getTissue output --> get set of genes with in a specified tau range + frac range --> plot expression of these genes across all tissues (could get messy)
+ 	- plotOptimum instead of plotTop
+ 	- more complex getControl function --> allow pairwise, multiple, all tissues
+
+3) Catching errors with stop()
+	- when input contains negative values
+	- when gene name case is wrong
+
+#################################
+To increase chance of publication
+#################################
+
+- publish on CRAN --> allow to mature before and get some users --> submit for journal publication (e.g. journal of statistical software)
+	- maintain and develop regularly
+- A general toolkit for a discipline is far better than a small specific package - be ambitious - think how you can increase scope and functionality
+- In your paper, spend time to provide a context:
+	- existing literature
+	- explain relevant background material
+	- describing the innovative features of your package
+	- state in the introduction which version of the package was used for this paper 
+- The output in the paper should exactly match the results obtained from the test data in the package
+	- write good code
+		- avoid generic object names --> they may already exist as functions (e.g. "data")
+		- put spaces around assignment operators " <- "
+		- errors should return something informative to user - function errors should be raised using stop()
+		- Use the S3 object class system - more interactive an flexible (http://adv-r.had.co.nz/S3.html)
+		- allow the user to pass plotting arguments e.g. fonts, labels, line types, titles
+			- add an “...” argument so that plotting parameters can be used, and make sure that the plotting parameters passed in this way do not cause clashes
+		- set up and use default arguments in your code for running test data
+		- Use FALSE and TRUE not F and T
+		- use match.arg() function for user input to simplify the code
+
+######################
+# set up a new package
+######################
+create an empty folder the same name as your package
+run makePackage.R (toolbox/R)
+stop after create(packagename)
+you now have R/, DESCRIPTON, NAMESPACE, and packagename.Rproj
+
+#########################
+#### R FOLDER ####
+#########################
+add a .R file for each function
+functions imported (used) from other packages require:
+	# in roxygen header:	'@imports packagname' e.g. '@imports ggplot2'
+	# when called: 'packagename::funcitonname' e.g. ggplot2::geom_density
+
+###################
+### DATA FOLDER ###
+###################
+
+##### DATA USED BY FUNCTIONS
+data used by functions are stored in wd/package.name/R/sysdata.R
+
+# to create R/sysdata.R
+setwd('directory storing the R package')
+create an object to store the data
+use_data(object, pkg = 'package.name', internal = TRUE, overwrite = TRUE, compress = 'gzip')
+
+# to allow a function to access the data in R/sysdata.R
+ package.name::object
+
+# links
+https://www.rstudio.com/wp-content/uploads/2015/03/devtools-cheatsheet.pdf
+http://r-pkgs.had.co.nz/data.html
+https://rdrr.io/cran/devtools/man/use_data.html

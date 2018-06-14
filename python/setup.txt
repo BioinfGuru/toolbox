@@ -1,0 +1,30 @@
+# useful links
+https://conda.io/docs/user-guide/install/linux.html 				# install anaconda
+https://conda.io/docs/user-guide/tasks/manage-python.html 			# manage python
+https://conda.io/docs/user-guide/tasks/manage-environments.html		# manage environments
+
+# after installing, add to .bashrc
+export PATH=/home/kcondon/anaconda3/bin:$PATH;
+
+# useful commands
+python --version 										# verify version of python used by current environment
+conda update python 									# update to lastest patch of version used (wont switch 2 to 3)
+conda create -n env_python_2.7 python=2.7 anaconda 		# creates an environment that uses python 2.7
+conda env list 											# view all environments (* is active)
+source activate env_python_2.7 							# activates named environment
+source deactivate 										# deactivates named environment
+conda remove --name env_python_2.7 --all				# deletes named environment
+
+# consider an IDE
+https://packagecontrol.io/packages/Anaconda 	# sublime
+https://www.jetbrains.com/pycharm/ 				# pycharm
+
+
+# usage
+1 Typing python in the command line opens a python terminal
+2 write a script that ends with .py to execute in bash
+
+# general rules
+ - the number of spaces + tabs at the start of a line matter
+ - each line can only have one command
+ - all indented lines under a function are part of the function until the first unindented line

@@ -1,0 +1,84 @@
+
+###################
+##				 ##
+##	FROM SOURCE  ##
+##				 ##
+###################
+
+## Remove + install latest Rstudio
+	sudo apt-get remove rstudio
+	download from https://www.rstudio.com/products/rstudio/download/#download
+	launch
+	install
+
+## Remove R
+	sudo apt-get remove r-base
+	sudo apt-get remove r-base-core
+	sudo apt autoremove
+	sudo apt-get update
+	sudo apt-get upgrade
+
+## Install multiple versions of R (https://support.rstudio.com/hc/en-us/articles/215488098-Installing-multiple-versions-of-R)
+	cd
+	sudo sed -i -e 's/# deb-src/deb-src/' ../../etc/apt/sources.list
+	sudo apt-get update
+	sudo apt-get build-dep r-base
+	download and extract R-x.y.z.tar.gz from https://mirrors.ebi.ac.uk/CRAN/
+	cd R-x.y.z
+	sudo ./configure --prefix=/opt/R/x.y.z --enable-R-shlib=yes --with-cairo=yes
+	sudo make
+	sudo make install
+
+## Set which version to use when you call R
+	cd
+	sudo nano .profile	
+	export RSTUDIO_WHICH_R=/opt/R/x.y.z/bin/R
+	restart computer
+
+## Install bioconductor
+	source("https://bioconductor.org/biocLite.R")
+	biocLite()
+
+## Fixing Configure Errors:
+	# No F77 compiler found
+	sudo apt-get install gfortran
+	# --with-readline=yes (default) and headers/libs are not available 
+	sudo apt-get install libreadline6 libreadline6-dev
+	# --with-x=yes (default) and X11 headers/libs are not available 
+	sudo apt-get install libxext6 libxext-dev libxext6:i386 libxt6 libxmu-dev
+	# bzip2 library and headers are required
+	sudo apt-get install libbz2-dev
+	# liblzma library and headers are required
+	sudo apt-get install liblzma-dev
+	# pcre >= 8.20 library and headers are required
+	sudo apt-get libpcre3-dev # may need to do this one through synaptic package manager
+	# you cannot build info or HTML versions of the R manuals
+	synaptic package manager: texinfo
+	 java fatal error
+	follow the advice of jon here: https://www.biostars.org/p/174953/
+
+## fix cairo problems
+synaptic package manager: r-cran-cairodevice
+sudo ./configure --prefix=/opt/R/3.5.0 --enable-R-shlib=yes --with-cairo=yes
+sudo make all
+sudo install
+create .Rprofile in home folder and add the following 3 lines:
+	setHook(packageEvent("grDevices", "onLoad"),
+	function(...) grDevices::X11.options(type='cairo'))
+	options(device='x11')
+Test cairo:
+	open rstudio from command line
+	> capabilities('cairo')
+	you may need to install:	install.packages('Cairo')
+								install.packages('cairoDevice')
+
+
+###################
+##				 ##
+##	FROM BINARY  ##
+##				 ##
+###################
+
+First follow instructions here: https://launchpad.net/~marutter/+archive/ubuntu/rrutter3.5
+Then follow instructions here: https://mirrors.ebi.ac.uk/CRAN/
+Install bioconductor as above

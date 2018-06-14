@@ -1,0 +1,368 @@
+####################################################################################################################
+######################################### LINUX COMMANDS ###########################################################
+####################################################################################################################
+bash for loops			$ for i in *.bam; do echo $i; done;
+						Iterates through all bam files in a folder and prints each file name to the command line
+						"done" closes the loop
+						dont forget the '$'
+						to run multiple commands just put a space between the commands (no semi-colon)
+
+
+$ non_chrM_list=$(samtools view -H mswatd-1.dedup.bam | grep chr | cut -f2 | sed 's/SN://g' | grep -v chrM)
+$ samtools view -b mswatd-1.dedup.bam $non_chrM_list -o mswatd-1_no_mito.bam
+
+# working "for loop" ################
+for i in *.bam; do non_chrM_list=$(samtools view -H $i | grep chr | cut -f2 | sed 's/SN://g' | grep -v chrM) samtools view -b $i $non_chrM_list -o /NGS/working_projects/AtacSeq/data/11_bams_noMito/$i.no-mito.bam; done;
+
+
+scp 					to secure transfer from desktop computer to utah: scp [desktop_comp_path/filename] k.condon@utah:[utah_path] 
+						Also works in other direction by reversing the 2 paths
+lscpu					To find out how many cores you have: X number of sockets --> each CPU has Y cores and each core has Z threads --> X(Y) = total number of cores
+/usr/bin/time -v [command]	To find out the runtime + max memory usage (in kb) of a command
+uname -m 				Identifies if the machine is 32 or 64 bit
+./[x]					To run program [x] which is in the folder that I am in
+info					Lists commands available
+man [x]					Manual page for the [x] command
+apropos [x]				Lists all available commands to do with [x]
+tab					adds to partially completed commands fi you cant remember the next letter
+ctrl+c					Stops most programs, returns to prompt
+top					lists processes currently running on the comp
+cat 					print a file to the terminal - usage: cat <filename>
+						to append (merge) a file with another file: cat <filename1> <filename2>
+						to apped all files in a directory nito 21 file: http://unix.stackexchange.com/questions/40922/how-do-i-concatenate-all-the-files-in-a-given-directory-in-order-of-date-where
+zcat					to append (merge) .gz files: zcat <filename1.gz> <filename2.gz> | gzip -c >mergedfilename.gz
+											Example: zcat *.fastq.gz | gzip -c > *.fq.gz (note changing from fastq to fq to avoid infinite loop)
+find -type f -name meme.txt -exec cat {} + >>all_motifs.txt
+						finees all files in sudirectories of curren tdirectory that are named meme.txt and concatenates them into a single file called all_motifs.txt
+awk						To searches for a pattern (by regex) in each line of a file to perform an action: awk '/searchpattern/ {action to perform on matches} <filename>'
+						To print out the 2nd column of a tab delimited file:	awk -F '\t' '{print $6}' filename
+						Using if loops to print an altered file:
+						awk -F $'\t' 'BEGIN {OFS = FS}{if ($6 == "+") {$2 = $2 + 4} else if ($6 == "‐") {$3 = $3 - 5} print $0}' infile_name >outfile_name
+grep 					This uses regex to search and print every line of a file containing the search term 
+						Usage: grep <options> <searchterm> <filename> (e.g. grep 'my motif' jaspar.txt) returns every line containing <my motif>
+						To return every line containing the word "motifm" in the file 'jaspar.txt':	$: grep motif jaspar.txt
+						To return every line contining the word "motif" in any file in the current directory or subdirectories:	$: grep -r motif .
+						To search a set of files for a term: grep -rnw pattern path e.g. $ grep -rnw separator /NGS/users/Kenneth/scripts/perl_tutorials/
+						To compare 2 files and get the unique lines in file 2: grep -wv -f file1.txt file2.txt > file2.unique
+|						Passes output of command 1 as input of command 2 e.g. grep motif jaspar.txt|wc -l (counts number of lines returned by grep
+sed 					do something to a file
+							add a header:		sed -i '1i some string' filename 	# the 1i tells sed to only insert the string in the 1st line
+							change all lines:	sed -e 's///' filename 				# substitutes 1 pattern for another in every line
+cut						cut -f 2 <filename> this veiws only the second column in a file. To write to outfile: cut -f2 <filname> > <outfile>
+						cut -f 1-3,6-7 infile >outfile # writes columns 1,2,3,6 and 7 of infile to an outfile
+paste					same as cbind in R, combines the columns of 2 or more files
+sort 					sorts a file y a column e.g. sort -k2n filename
+diff 					compares 2 files for difference  
+comm 					compares 2 sorted files, usage: comm <file1> <file2>, returns 3 columns - col1 = intersection of file1 and file2, col2 = unique to file1, col3 = unique to file2
+history					Lists commands preveiously entered (can also mouse scroll wheel)
+history|grep [x]			Searches history for [x]
+![x]					Execute [x] where x is the number of a command in the history listls
+pwd					Please what directory am I in?
+tree					Displays a tree of all the files and folders in the current directory 
+tree -d					Tree only shows folders (usefull to get the path to a directory so full path can be typed to change directory)
+cd [x]					Changes directory to directory [x]
+					must be in the parent directory of {x] for this to work, otherwise you must type the full file pathway
+cd ..					Returns to the parent directory of [x], dont forget the space between cd and ..
+cd or cd ~				Takes you to the home directory (NB: ~ is the symbol for the home directory)
+ls					Lists sub-drectories within the directory you are in
+ls -l					Same as above but gives more info
+ls -al					Shows hidden files (white) and folders (blue) - they'll all begin with a period, green = exectutable
+*					Represents a string of unknown characters
+?					Represents a single unknown character
+touch					Changes the time and date stamp of a file, also creates a new file
+chmod					changes permissions: u = user, g = group, o = other/world, + add, - remove, r = read, w = write, x = exectute
+					e.g. $ chmod u+w empty.txt
+-v					Adds a "verbose" option to any command so an explanation of what was jus tdone is shown e.b. rm -ve filled.txt
+renaming files 		for i in *Huge*; do mv $i ${i/Huge/Monstrous}; done
+mv					Multiple uses:	rename files e.g. mv [x] [y] where x is current name and y is new name
+							move a file (you must first be in the directory of the file to be moved) then : mv [name of file to be moved] [path of location to be moved to]
+cp					copies files can be done in 2 ways depending on whether you are in the origin or destination folder or wwhteher you are not moving folders
+					If keeping copy in same folder:	cp [x] [xcopy] where x is file to be copied and y is new copy with a new name
+					If in folder of origin:	cp [file to be copyied] [destination folder path]
+					If in destination folder: cp [path of file to be copied] [.]		(NB the space followed by a . means copy to my current folder)
+rm					deletes files 
+rmdir					deletes empty directories
+rm -rf					deletes non-empty directories and all its contents
+mkdir					Creates new directory, e.g. mkdir Images
+|					Pipe: Running 2 programs where the output of the former becomes the input of the later e.g. dmsg | tail
+dmesg					Shows the various processes just occured e.g. if pluggin in a usb, tells you it is done
+>					Redirects output of a program into a file for storage, used when the program can't store outputs 
+>>					same as above but appends an existing file
+< [x] >					same as above but uses an existing file as input, to be put through the program, then saves teh output	
+/dev/null				Sends the output of a file to the null file which is a black hole i.e. deleted
+vi					main text editor, :q! to exit
+nano					a simpler text editer, requires sudo (i.e. sudo nano [x] where [x] is the name of the file to be edited)
+nano -cw				c - displays info about location of the cursor (very handy)
+					w - turns off line wrapping (less confusing display)
+whoami					displays the current user name			
+who					displays the current processes running by the current user
+finger					Displays info about current users
+convert             convert a file type to another type e.g. To convert pdf to png: convert -density 150 sigma2.pdf -quality 90 sigma2.png
+ssh -X spectre.le.ac.uk			Connects to Spectre.....an extremely powerful univeristy computer for running your programs
+					So the program there runs there but displays on your comp
+					Connection requires your blackboard password 
+					exit (x2) to go back to own shell --> MAKE sure it says terminal ...not spectre ...at the top of the window
+sh					creates scripts
+kill [pid]				kills a process running, [pid] is pid number gotten from running "top" to show all processes running
+					only works for programs you have started yourself from the the terminal
+					if started in GUI --> use force quit in the panel
+sudo xkill				uses terminal to kill an open program. will get you to click on the the program GUI to force it to quit
+alien					converts RPM packages to .deb packages for installation
+mysql -u kwc17 -p			MySQL requires ; after every command. quit to leave
+wget	[URL]				Downloads everything on a URL page
+file [x]				Gives some information about the type of file [x] is according to its extension
+gzip					compresses a file --> adds .gz extension
+gzip -d					decompresses a .gz file --> removes .gz extension
+tar -xvf				archives/unarchves a decompressed file
+					-xvf to see that it has occured where x (extract), v (verbose), f (file)
+javac [classname]			compiles a class in java
+md5sum				checks that a download is not corrupted
+					md5sum filename.txt 			To get the md5sum of the downloaded file for comparison against the md5sum provided
+					md5sum * > filename.txt 		Calculates md5sums for all files in a directory and writes the output to filename.txt
+					md5sum -c filename.txt 		Calculates md5sums for all files in a directory and checks them against those listed in filename.txt
+SPECTRE:				Access via no machine
+	gunzip 				used to unzip on spectre ("gunzip *.gz" replaces zipped files with unzipped ones)
+	Loading programs (terminal)	1st:	module load [programnam] 	-->	enter 			This loads the program
+					2nd:	[modulename] &			-->	enter			This opens the program in a new window
+	pregap4				Program that preprocesses chromatograms
+					module load staden --> enter --> pregap4 $ --> enter
+	gap4				program for examining and editing assemblies to create a consensus sequence
+	emboss				suite of programs for annotating consensus sequences
+
+bioinf6.bioc.le.ac.uk			Not a command yet, this is a university file server accessed via sftp or ssh (ssh easier)
+	
+	sftp bioinf6.bioc.le.ac.uk		Accesses via sftp
+		help & ?			for help
+		pwd				to identify current server directory
+		lpwd				to identify current laptop directory
+		cd				change server directory
+		lcd				change laptop directory
+		get				file server rto laptop
+		put				laptop to file server
+		progress			To tell you something is happening
+		exit & quit			exits
+	ssh bioinf6.bioc.le.ac.uk		Accesses via ssh
+
+
+
+Veiwing files:
+cat					displays entire file on screen, tells you if a file exits
+more					allows scrolling through a file
+less					same as more but moew sophisticated
+head					shows only top 10 lines of the file
+tail					shows only bottom 10 lines of the file
+
+
+Text editors:	vi		main editor
+		nano		simple editor
+		gvim		vi improved with a GUI
+		bluefish	
+		gedit (pluma)	most commonly used (pluma is for mate!)
+
+
+
+Tips:
+Highlighting with left mouse button copies the highlighted text.
+Clicking the middle mouse button pastes the highlighted text.
+Naming files/directories - Begin file names with lower case, directory names with upper case, no spaces ever!
+If a program to be run opens a GUI, type & after the name before pressing enter --- this returns the terminal to a prompt and opens the gui
+
+NB: After the prompt ($) comes the command (e.g. cd) which is then followed by options sperated by spaces (e.g. -l)
+
+Permissions:
+ls -l will return lots of info in a list
+The string of 10 letters at the beginning refers to permissions (rwx = read, write, execute)
+Character 1: 		d means this is a directory whereas - means it is a file
+Characters 2-4:		Owner (Me)
+Characters 5-7:		Group (Permission groups I create)
+Characters 8-10:	World (Anyone who is not owner or group but has access)
+
+Editing:
+#	This character is used to make a comment for the person reading the file, everything after on the line is ignored by the OS
+blank lines are also ignored (if first line is blank the edit/script may not work though)
+alias rm='rm -l' 		alias 	- 	used isntead of default
+				rm= 	-	when rm command is exectued
+				''	-	everything in the single quotation marks is executed i.e. rm -l occurs (a prompt "are you sure?")
+				no spaces except inside the quotation marks
+				Effect only works after starting a new terminal
+you can copy and paste but be careful with quotation marks as they may not copy across correctly
+
+
+MySQL commands:
+VERY IMPORTANT - a semi-colon is required after every command, and select execute to run, save all scripts as .sql
+create database [name];:		Makes and names a new database
+drop database if exists [name];:	Deletes named database
+use [databasename]:			Makes the database the default
+create table [name];:			creates a new table
+To add columns to a table:		Insert into [table name] (column1, column 2)
+To add new columns to a table:		Alter table [tablename] add column [new column name] after [column name - of the column you want on the left of the new column - this is optional]
+To add new rows				Insert into [tablename] values (1, jack, brabham)
+To add values to rows			Insert into [table name] (row 1 values separated by commas), (row 2 commas separated by commas) NB: all words must be in quotation marks!			
+describe [name];:			describes the type of data in each column of the table [name]
+select distinct;:			excludes any repeated records
+selecting names beginning with P:	Select * where name like 'P%' 
+Creating relationships:			# How to ensure a lecturer is always associated with 1 office (no more, no less):
+					# In lecturer table: insert an officeid column and make it not null --> officeid int not null --> this prevents less than 1 office per lecturer
+					# Then force the officeid column to contain only unique values in each row --> this prevents more than 1 office per lecturer
+					# Then assign it as a foreign key --> foreign key (officeid) references office (officeid)
+					# If you repeat same in office table, you will create a 1-1 relationship, if you dont then it remains a 0-1 relationship
+Updating a value:			update [table name] set [column name] = '[new value]' where [condition column name] = '[condition value]'
+counting total number of values:	select count(*) as [appropriate column name] from [table name] where [condition column name] = '[condition value]'
+Using YEAR in a where clause:		where year(birth) = 1972;
+Setting 2 where clauses:		Each clause is enclosed in brackets and separated by and/or
+					Each clause recieves a column name and a condition e.g. where (Lname = johnson or Lname = ferguson)
+ordering results:			Select [column name] from [table] order by [column name] [desc or asc]
+Selecting and grouping a column:	Select [column name], count(*) as [new column name] from [table] group by [columnname]
+Assigning primary/foreign keys:		create table [tablename] ([column1name] [char type], [column2name] [char type], primary key (columnname), foreign key ([columnname]) references [tablename] ([primarykeycolumnname]))
+Joins:					Joining 2 columns from seperate tables with a FK + PK assigned
+					Using theta equi-join:	select [columnname], [columnname] from [tablename1], [tablename2] where [tablename1].[primarykeycolumnname] = [tablename2].[foreignkeycolumnname]
+					Using natural join:	select [columnname], [columnname] FROM [1st table name] NATURAL JOIN [2nd table name]
+					Remember 1:		Dont use "select *" because the linking table in many to many relationships will have foriegn key columns named the same as primary key columns --> wont work 
+					Remember 2:		these will exclude any values in one table that dont have a corresponding value in the other table
+					So use natural LEFT join or natural RIGHT join
+Creating veiws:				create veiw [veiwname] as select [do a join]
+					Then to see the veiw --> select * from [veiwname]
+Unique ([columnname]):			Means that every value in [columnname] must be unique
+Database transaction:			needed when you cant update 1 table without updating another at same time....wont work so database transaction needed
+					When you hae queries that MUST NOT fail half way through the script!
+					"Autocommit" - makes sure all statements will work before actioning them
+					found in mysql --> query tab --> auto-commit (turn off) --> type script --> commit transaction --> if it fails --> rollback transaction
+
+Java commands:
+Always first line			Public static void main (String) [] args) {					NB: after the script you must close with }
+Comment lines:				Create single comment line		//
+					Make multiple comment lines		/* [multiple lines of text] */
+					Make multipl lines that hint at entering important info		/** [multiple hinted lines] */
+Create javadoc				open terminal --> go to src directory --> create javadoc [nameclass] --> go to src folder and open the webpage to see the javadoc
+
+
+
+####################################################################################################################
+######################################### Mapping NGS ##############################################################
+####################################################################################################################
+
+To map NGS to home directory with full permissions (NB: case sensitive):
+
+$ cd to home directory
+$ mkdir NGS
+$ sudo nano /etc/fstab
+
+Save the following line to the end of the file:
+//walter/NGS /home/kcondon/NGS cifs username=k.condon,password=2leicester!,domain=mrch,file_mode=0777,dir_mode=0777,sec=ntlm
+# Note: If you change your password this will break, you must update the password here.
+
+Now mount the drive
+$ sudo mount -a
+
+# Note on error: "mount error(5): Input/output error Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)"
+# this is telling you that the password is wrong.
+
+To unmount (start again)
+$ sudo umount -a
+
+
+https://wiki.ubuntu.com/MountWindowsSharesPermanently
+
+####################################################################################################################
+######################################### $PATH EDITING ############################################################
+####################################################################################################################		
+Great explanation here: http://www.linfo.org/path_env_var.html
+echo $PATH				Prints the $PATH variable - $PATH is a variable that stores locations. When a program name is called in the command line the linux system searches the directories stored in $PATH for the executable of the program
+export PATH=$PATH:[full path to the executable]		adds the PATH variable with the path of a newly installed program to the start of $PATH
+source .bashrc 			tells the machine $PATH is updated (wont work otherwise) - alternativly, just close the terminal and reopen it		
+Example - bedClip is a program whose executable (after installation) is stored in /NGS/Software/kentUtils/bin/ - so just add the path, source it, then call the program - look at $PATH before and after to see the edit.
+#########################################################
+echo $PATH
+export PATH=$PATH:/NGS/Software/kentUtils/bin/
+source .bashrc
+echo $PATH
+#########################################################
+
+find					find [path...] [expression]
+whereis	[x]				Finds all files associated with program x and displays their paths
+which [x]				When 2 identical programs are installed, but at different locations, which tells you which one is executed by searching the $PATH variable
+
+####################################################################################################################
+######################################### .bashrc EDITING ##########################################################
+####################################################################################################################		
+
+On linux laptop/desktop:
+    METHOD 1:
+                Put the program folder where you want it (usually home bin)
+                Go into the folder to see the bin file --> in there is the launcher/executable/shell script
+                Open terminal:     	home directory
+                command:    		gedit .bashrc
+                edit file:			PATH=$PATH:[pathtodirectoryofprogram1executable]:[pathtodirectoryofprogram1executable;
+                					Save and close .bashrc file
+                command:    		source .bashrc
+                To check good installation type the program name into the terminal or type "which "program name"" --> both should return the path to the program executable file
+                The program can now be run from the command line
+                Now create a launcher on the desktop if needed
+
+    METHOD 2:   gedit .bashrc
+                alias programname="fullpath/programexecutable"
+                source .bashrc
+
+On Utah:
+	NB1: 	If you try to run the program on a different linux server e.g. Hamphsire, you have to repeat the editing of the hampshire .bashrc file
+	NB2:	If you make a mistake --> ctrlX (exit) --> N (save)
+
+	METHOD 1:
+				command:	nano .bashrc
+				scroll down to last empty line (below "# user specific aliases and functions")
+				create an alias for the path by pasting (with no spaces):	alias program_name='path_to_executable'
+	
+	METHOD 2:
+				command:						nano .bashrc
+				add to the export command:		export PATH=$PATH:/NGS_Walter/Software/meme_install/bin
+
+	To save:
+				ctrlX (exit) --> Y (save) --> enter
+				command:	source .bashrc
+				check it:	which program_name
+
+
+####################################################################################################################
+######################################### Working with QSUB ########################################################
+####################################################################################################################	
+
+qsub manual:	http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
+
+Piping (|) + Redirecting (>):	
+				https://stackoverflow.com/questions/18322286/how-can-i-use-a-pipe-or-redirect-in-a-qsub-command?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+				qsub bash -c "cmd <options> | cmd2 <options>"
+
+Small: 			For commands that can't be parallelised (no option to use multple cores/threads)
+				qsub -cwd -j y -b yes -P NGS -N [job_name] -o [output_folder] -q small.q [your_job and its arguments]
+
+Big:			For commands that can be parallelised (use multiple cores/threads)
+				qsub -cwd -j y -b yes -P NGS -N [job_name] -o [output_folder] -pe big 10 [your_job and its arguments]
+
+NB: 1) All files and folders require their full path --> the grid is a different machine to utah (where NGS is)
+	2) The grid can't handle ">". So you must make master and slave scripts
+	3) Java:
+		The grid works in java7 by default
+		So all [your_job and its arguments] that begin with 'java' must be prefixed with '/usr/java/latest8/bin/'
+		e.g. qsub -cwd -j y -b yes -P NGS -N fgwatd0 -o /NGS/working_projects/AtacSeq/data/10_bams_nodups -q small.q /usr/java/latest8/bin/java -jar /NGS/Software/picard/build/libs/picard.jar [arguments]
+		Otherwise you get an error that looks like this:
+		'Exception in thread "main" java.lang.UnsupportedClassVersionError: picard/cmdline/PicardCommandLine : Unsupported major.minor version 52.0'
+
+-e [[hostname]:]path 			Defines the path  used  for  the  standard error stream of the job (-e utah:path/file_name)
+-j y[es]|n[o]					Specifies whether or not the standard error  stream  of the job is merged into the standard output stream.
+-o [[hostname]:]path 			The path used for the standard  output  stream  of  the job (-o /NGS/users/Kenneth/ATAC/data/grid_out)
+-verify							Checks if the job will run (job wont be run)
+-l hostname=maine.mrch.har.mrc.ac.uk 				To run on a specific host (maine in this case)
+-q server address 				Also to run on a specific host eg. -q small.q@kansas.mrch.har.mr.ac.uk
+qstat -f 						To view all jobs on the grid
+qstat -f | grep k.condon 		To veiw all jobs from k.condon on the grid 
+qstat -u k.condon 				Same as above but also gives the machine name that the job is running on
+qdel -u k.condon 				To delete all jobs form k.condon from the grid
+qdel <jobid> 					To delete a single job
+qstat -j <job number>			To view information (inc. error status) about a job
+								If error says "can't get password entry for user "k.condon". Either the user does not exist or NIS error!" = command is wrong
+ssh top@[machine_name] 			To view current running programs on a grid machine. Continue connecting: yes Password: top Exit: q
+
+######################################
+# Calculating number of cores needed #
+######################################
+
