@@ -3,8 +3,8 @@ https://conda.io/docs/user-guide/install/linux.html 				# install anaconda
 https://conda.io/docs/user-guide/tasks/manage-python.html 			# manage python
 https://conda.io/docs/user-guide/tasks/manage-environments.html		# manage environments
 
-# after installing, add to .bashrc
-export PATH=/home/kcondon/anaconda3/bin:$PATH;
+# after installing, check install location is added to PATH:
+python --version  --> Python 3.6.5 :: Anaconda, Inc.
 
 # useful commands
 python --version 										# verify version of python used by current environment
@@ -21,8 +21,12 @@ https://www.jetbrains.com/pycharm/ 				# pycharm
 
 
 # usage
-1 Typing python in the command line opens a python terminal
+1 Type 'python' in the command line to open a python terminal
 2 write a script that ends with .py to execute in bash
+
+# shebang depends on pythong version intended to call
+#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 # general rules
  - the number of spaces + tabs at the start of a line matter
