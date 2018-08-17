@@ -20,10 +20,8 @@ rm(list = ls())
 library(tispec)
 
 # Set working directory
-#wd <- '/home/kenneth/Documents/bioinf/data/' # linux laptop
-wd <- '~/NGS/users/Kenneth/rpackages/data/' # linux desktop
-#wd <- 'C:/users/admin/Documents/software/R/' # windows laptop
-#setwd(wd)
+wd <- '/home/kenneth/Documents/' # linux
+setwd(wd)
 
 ########################################
 ############### PIPELINE ###############

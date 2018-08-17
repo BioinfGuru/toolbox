@@ -29,8 +29,7 @@ suppressPackageStartupMessages({
 })
 
 # working directory
-#wd <- '/home/kenneth/Documents/bioinf/rpackages/' # laptop
-wd <- '~/NGS/users/Kenneth/rpackages/' # desktop
+wd <- '/home/kenneth/Documents/'
 setwd(wd)
 
 # set package name
@@ -58,7 +57,6 @@ use_travis(myNewPackageName)                        # adds travis to package
 # unit testing
 use_testthat(myNewPackageName)                      # unit testing
 test_dir(paste(wd, myNewPackageName, '/', 'tests/testthat', sep = ''))
-#test_file('~/NGS/users/Kenneth/rpackages/tispec/tests/testthat/test_log2Tran.R')
 
 
 
