@@ -1,18 +1,12 @@
 import os
 import sys
 
-# Example...
-# 1 Seq ...
-#Seq = 'GTTAGCTTTCTGACGCTAATT'
-#Seq = 'GTT'
-Seq = 'GTTATA'
-
-# 2 Dictionary ...
+# data structures
+Seq = 'GTTAGCTTTCTGACGCTAATT'
 D = {'Val':['GTT','GTC','GTA','GTG'],'Ile':['ATT','ATC','ATA']}
+codons = []
 
-# 3 loop over DNA sequence while converting list of codons...
-codons = [] # creates an empty array
-
+# iterate
 for x in range (0,len(Seq),++3): # ++ is incrementing
 	#print(len(Seq))
 	#print(Seq[x]+'Roween')
@@ -22,7 +16,7 @@ for x in range (0,len(Seq),++3): # ++ is incrementing
 		codon = Seq[x]+ Seq[x+1]+ Seq[x+2] # + is concatinating strings
 		codons.append(codon) # adds the new codon to the array "codons"
 	except:
-		pass                                 # what pass doing ?
+		pass # pass means don't exit for any non-fatal error
 
 # myamino_acids = []
 # for codon in codons:

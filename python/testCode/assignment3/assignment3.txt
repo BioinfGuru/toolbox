@@ -1,0 +1,31 @@
+Assignment #2
+We have an excel file (MCG.V2.xlsx) that we need to parse and extract information in a form of dictionary and return it to the users. 
+The dictionary key should include gene name and AA (amino acid) mutation (gene_name:AAmut). Further, other associated values should be in a list per each key. 
+
+Tip:The excel file need to be converted to CSV one first.
+
+
+
+## 1- parse the file and get inforamtion in a dictionary and print it 
+
+
+## issue 1 :
+#some lines are partialy empty ; there is no clear pattern for empties 
+
+## solution:
+#find a pattern to parse these lines, to undrestand the structure of the file , it can be done with one script or two scripts 
+
+#in case of 2 scripts;
+#the first script to make a new version of the file 
+#2nd script: 
+#to parse the new version of the file and to able to use it later 
+
+
+
+variants that can be ignored:
+
+FGFR! Amplification
+FGFR2 Amplification
+Progesterone Receptor
+BRAF fusion
+NF1 mutations

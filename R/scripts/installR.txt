@@ -7,9 +7,10 @@
 
 ## Remove + install latest Rstudio
 	sudo apt-get remove rstudio
-	download from https://www.rstudio.com/products/rstudio/download/#download
+	download installer from https://www.rstudio.com/products/rstudio/download/#download
 	launch
 	install
+	delete installer
 
 ## Remove R
 	sudo apt-get remove r-base
@@ -22,8 +23,9 @@
 	cd
 	sudo sed -i -e 's/# deb-src/deb-src/' ../../etc/apt/sources.list
 	sudo apt-get update
+	sudo apt-get upgrade
 	sudo apt-get build-dep r-base
-	download and extract R-x.y.z.tar.gz from https://mirrors.ebi.ac.uk/CRAN/
+	download and extract R-x.y.z.tar.gz from https://ftp.heanet.ie/mirrors/cran.r-project.org/
 	cd R-x.y.z
 	sudo ./configure --prefix=/opt/R/x.y.z --enable-R-shlib=yes --with-cairo=yes
 	sudo make
