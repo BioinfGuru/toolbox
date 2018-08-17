@@ -14,9 +14,9 @@
 rm(list = ls())
 
 # use dev version (mid april - midoctober)
-#library(BiocInstaller)
-#useDevel(devel=FALSE) # enter true for devel, false for release
-#isDevel() # returns true for devel, false for release
+library(BiocInstaller)
+useDevel(devel=FALSE) # enter true for devel, false for release
+isDevel() # returns true for devel, false for release
 
 # load libraries
 suppressPackageStartupMessages({
