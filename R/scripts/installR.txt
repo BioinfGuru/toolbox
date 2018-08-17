@@ -37,9 +37,16 @@
 	export RSTUDIO_WHICH_R=/opt/R/x.y.z/bin/R
 	restart computer
 
-## Install bioconductor
-	source("https://bioconductor.org/biocLite.R")
-	biocLite()
+## Install BiocManager:		https://cran.r-project.org/web/packages/BiocManager/vignettes/BiocManager.html
+	chooseCRANmirror()
+	install.packages("BiocManager")
+	BiocManager::install("packagename") 		# to install packages
+	BiocManager::version() 						# to check bioconductor version
+	BiocManager::valid() 						# to check for out of date packages
+	
+	# biocLite is deprecated but here is the installation command in case needed:
+			# source("https://bioconductor.org/biocLite.R")
+			# biocLite()
 
 ## Fixing Configure Errors:
 	# No F77 compiler found
